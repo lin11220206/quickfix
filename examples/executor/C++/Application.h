@@ -35,6 +35,8 @@
 #include "quickfix/fix44/NewOrderSingle.h"
 #include "quickfix/fix50/NewOrderSingle.h"
 
+#include "quickfix/fix44/OrderCancelRequest.h"
+
 class Application
 : public FIX::Application, public FIX::MessageCracker
 {
@@ -60,6 +62,8 @@ public:
   void onMessage( const FIX43::NewOrderSingle&, const FIX::SessionID& );
   void onMessage( const FIX44::NewOrderSingle&, const FIX::SessionID& );
   void onMessage( const FIX50::NewOrderSingle&, const FIX::SessionID& );
+  
+  void onMessage( const FIX44::OrderCancelRequest&, const FIX::SessionID& );
 
   std::string genOrderID() {
     std::stringstream stream;

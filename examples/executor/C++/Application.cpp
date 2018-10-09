@@ -292,6 +292,46 @@ void Application::onMessage( const FIX44::NewOrderSingle& message,
   catch ( FIX::SessionNotFound& ) {}
 }
 
+void Application::onMessage( const FIX44::OrderCancelRequest& message,
+							 const FIX::SessionID& sessionID )
+{
+  FIX::Symbol symbol;
+  FIX::Side side;
+  FIX::OrderQty orderQty;
+  FIX::ClOrdID clOrdID;
+  FIX::Account account;
+
+  message.get( symbol );
+  message.get( side );
+  message.get( orderQty );
+  message.get( clOrdID );
+
+  FIX44::ExecutionReport executionReport = FIX44::ExecutionReport
+      ( FIX::OrderID( genOrderID() ),
+        FIX::ExecID( genExecID() ),
+        FIX::ExecType( FIX::ExecType_CANCELED ),
+        FIX::OrdStatus( FIX::ExecType_CANCELED ),
+        side,
+        FIX::LeavesQty( 0 ),
+        FIX::CumQty( 0 ),
+        FIX::AvgPx( 0 ) );
+
+  executionReport.set( clOrdID );
+  executionReport.set( symbol );
+  executionReport.set( orderQty );
+  executionReport.set( FIX::LastQty( orderQty ) );
+
+  if( message.isSet(account) )
+    executionReport.setField( message.get(account) );
+
+  try
+  {
+    FIX::Session::sendToTarget( executionReport, sessionID );
+  }
+  catch ( FIX::SessionNotFound& ) {}
+  
+}
+
 void Application::onMessage( const FIX50::NewOrderSingle& message,
                              const FIX::SessionID& sessionID )
 {
