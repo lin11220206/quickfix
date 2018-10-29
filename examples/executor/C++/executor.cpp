@@ -39,8 +39,11 @@
 void wait()
 {
   std::cout << "Type Ctrl-C to quit" << std::endl;
+  char c;
   while(true)
   {
+    std::cin>>c;
+    if(c == 'q') break;
     FIX::process_sleep(1);
   }
 }
