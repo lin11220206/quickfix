@@ -297,13 +297,11 @@ void Application::onMessage( const FIX44::OrderCancelRequest& message,
 {
   FIX::Symbol symbol;
   FIX::Side side;
-  FIX::OrderQty orderQty;
   FIX::ClOrdID clOrdID;
   FIX::Account account;
 
   message.get( symbol );
   message.get( side );
-  message.get( orderQty );
   message.get( clOrdID );
 
   FIX44::ExecutionReport executionReport = FIX44::ExecutionReport
@@ -318,8 +316,6 @@ void Application::onMessage( const FIX44::OrderCancelRequest& message,
 
   executionReport.set( clOrdID );
   executionReport.set( symbol );
-  executionReport.set( orderQty );
-  executionReport.set( FIX::LastQty( orderQty ) );
 
   if( message.isSet(account) )
     executionReport.setField( message.get(account) );
